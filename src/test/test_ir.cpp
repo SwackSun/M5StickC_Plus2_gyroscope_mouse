@@ -25,7 +25,7 @@ namespace TEST
     {
         printf("ir task\n");
 
-        uint8_t IR_SEND_PIN = 19;
+        //uint8_t IR_SEND_PIN = 19;
         uint8_t cmd = 0x00;
         while (1)
         {
@@ -47,7 +47,7 @@ namespace TEST
     {
         printf("ir test\n");
 
-        uint8_t IR_SEND_PIN = 19;
+        //uint8_t IR_SEND_PIN = 19;
         // while (1) {
 
         //     sendNEC(IR_SEND_PIN, 0x10, 0xFF, 0);
