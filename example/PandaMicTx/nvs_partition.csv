@@ -1,0 +1,4 @@
+# nvs_partition.csv
+key,type,length
+version,uint32_t,0
+data,blob,128  # 假设 Data 结构体的大小不超过 128 字节
