@@ -8,7 +8,6 @@
 #include "enum_strings.h"
 #include "storage/Storage.h"
 
-#define CHAR_UP_HEIGHT 5
 #define CHAR_HEIGHT 5
 #define CHAR_WIDTH 5
 
@@ -129,12 +128,12 @@ private:
     char bV[50];
 
     // Header
-    canvas.setCursor(0, CHAR_HEIGHT);
+    canvas.setCursor(0, 0);
     canvas.print(":: PANDA MICROPHONE");
-    canvas.setCursor(canvas.width() - CHAR_WIDTH * 5, CHAR_HEIGHT);
+    canvas.setCursor(canvas.width() - CHAR_WIDTH * 5, 0);
     sprintf(bV, "%d%%", batteryPercentage);
     canvas.print(bV);
-    canvas.drawFastHLine(0, CHAR_HEIGHT + 2 + CHAR_UP_HEIGHT, canvas.width(), TFT_WHITE);
+    canvas.drawFastHLine(0, CHAR_HEIGHT + 2, canvas.width(), TFT_WHITE);
 
     canvas.setCursor(0, CHAR_HEIGHT * 2 + 3);
     canvas.println(storage.getActiveDevice().name);

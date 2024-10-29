@@ -39,8 +39,8 @@ public:
     headerCanvas.setFont(&TomThumb);
     headerCanvas.setTextSize(1);
     mainCanvas.createSprite(gfx->width() - HEADER_WIDTH, gfx->height());
-    mainCanvas.setTextSize(1);
     mainCanvas.setFont(&TomThumb);
+    mainCanvas.setTextSize(1);
     info("Back");
   }
 
@@ -149,16 +149,16 @@ private:
   void drawHeader()
   {
     headerCanvas.fillScreen(0);
-    headerCanvas.setRotation(2);
-    headerCanvas.setCursor(0, CHAR_HEIGHT);
+    headerCanvas.setRotation(3);
+    headerCanvas.setCursor(0, 0);
     headerCanvas.print(name.c_str());
     headerCanvas.drawLine(0, CHAR_HEIGHT + SPACING, headerCanvas.width(), CHAR_HEIGHT + SPACING, TFT_WHITE);
-    headerCanvas.setRotation(1);
+    headerCanvas.setRotation(0);
   }
 
   void drawMenu()
   {
-    GFXcanvas1 canvas = GFXcanvas1(gfx);
+    GFXcanvas1 canvas = GFXcanvas1(&mainCanvas);
     canvas.createSprite((int32_t)mainCanvas.width(), (int32_t)getItemPosition(menuItems.size()));
     canvas.setFont(&TomThumb);
     canvas.setTextSize(1);

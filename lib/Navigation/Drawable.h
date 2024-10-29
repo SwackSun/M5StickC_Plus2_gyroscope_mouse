@@ -8,8 +8,8 @@
 #define KEY_B 1
 #define KEY_C 2
 
-#define KEY_UP KEY_A
-#define KEY_SELECT KEY_B
+#define KEY_UP KEY_B
+#define KEY_SELECT KEY_A
 #define KEY_DOWN KEY_C
 
 class Drawable

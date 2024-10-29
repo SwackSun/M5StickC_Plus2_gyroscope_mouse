@@ -153,6 +153,7 @@ void setup()
     lcd.clearDisplay();
     lcd.drawBitmap(0, 0, LOGO, 128, 32, TFT_WHITE);
     lcd.display();
+    vTaskDelay(pdMS_TO_TICKS(2000));
   });
   mainMenu->command("Turn off", []() { turnOff(); });
 
