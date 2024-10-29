@@ -8,6 +8,7 @@
 #include "enum_strings.h"
 #include "storage/Storage.h"
 
+#define CHAR_UP_HEIGHT 5
 #define CHAR_HEIGHT 5
 #define CHAR_WIDTH 5
 
@@ -21,8 +22,8 @@ class HomeView : public Drawable
   Drawable *visualizer;
   A2DPSession *aSession;
 
-  GFXcanvas1* sidebar;
-  GFXcanvas1* canvas;
+  GFXcanvas1 sidebar;
+  GFXcanvas1 canvas;
 
   int batteryPercentage;
   GlobalTicker batteryTicker;
@@ -35,18 +36,18 @@ public:
         mainMenu(mainMenu),
         visualizer(visualizer),
         aSession(aSession),
-        sidebar(), canvas(),
+        sidebar(gfx), canvas(gfx),
         batteryTicker(1000, [&]() { refreshBatteryPercentage(); }),
         refreshTicker(250, [&]() { hasChanged = true; }),
         screenTicker(
             30000, [&]() { screenOff(); }, 1)
   {
-    sidebar = new GFXcanvas1(gfx);
-    sidebar->createSprite(SIDEBAR_WIDTH, gfx->height());
-    sidebar->setFont(&TomThumb);
-    canvas = new GFXcanvas1(gfx);
-    canvas->createSprite(gfx->width() - SIDEBAR_WIDTH, gfx->height());
-    canvas->setFont(&TomThumb);
+    sidebar.createSprite(SIDEBAR_WIDTH, gfx->height());
+    sidebar.setFont(&TomThumb);
+    sidebar.setTextSize(1);
+    canvas.createSprite(gfx->width() - SIDEBAR_WIDTH, gfx->height());
+    canvas.setFont(&TomThumb);
+    canvas.setTextSize(1);
     refreshBatteryPercentage();
   }
 
@@ -60,14 +61,16 @@ public:
     if (!screenActive)
       return gfx->fillScreen(0);
 
-    sidebar->fillScreen(0);
-    canvas->fillScreen(0);
+    sidebar.fillScreen(0);
+    canvas.fillScreen(0);
 
     drawCanvas();
     drawSidebar();
 
-    gfx->drawBitmap(SIDEBAR_WIDTH, 0, (uint8_t*)canvas->getBuffer(), (int32_t)canvas->width(), (int32_t)canvas->height(), 1, 0);
-    gfx->drawBitmap(0, 0, (uint8_t*)sidebar->getBuffer(), (int32_t)sidebar->width(), (int32_t)sidebar->height(), 1, 0);
+    gfx->startWrite();
+    canvas.pushSprite(SIDEBAR_WIDTH, 0);
+    sidebar.pushSprite(0, 0);
+    gfx->endWrite();
     hasChanged = false;
   }
 
@@ -126,38 +129,38 @@ private:
     char bV[50];
 
     // Header
-    canvas->setCursor(0, CHAR_HEIGHT);
-    canvas->print(":: PANDA MICROPHONE");
-    canvas->setCursor(canvas->width() - CHAR_WIDTH * 5, CHAR_HEIGHT);
+    canvas.setCursor(0, CHAR_HEIGHT);
+    canvas.print(":: PANDA MICROPHONE");
+    canvas.setCursor(canvas.width() - CHAR_WIDTH * 5, CHAR_HEIGHT);
     sprintf(bV, "%d%%", batteryPercentage);
-    canvas->print(bV);
-    canvas->drawFastHLine(0, CHAR_HEIGHT + 2, canvas->width(), 1);
+    canvas.print(bV);
+    canvas.drawFastHLine(0, CHAR_HEIGHT + 2 + CHAR_UP_HEIGHT, canvas.width(), TFT_WHITE);
 
-    canvas->setCursor(0, CHAR_HEIGHT * 2 + 3);
-    canvas->println(storage.getActiveDevice().name);
+    canvas.setCursor(0, CHAR_HEIGHT * 2 + 3);
+    canvas.println(storage.getActiveDevice().name);
 
-    canvas->print("BT: ");
-    canvas->println(enumToString(aSession->connectionState).c_str());
+    canvas.print("BT: ");
+    canvas.println(enumToString(aSession->connectionState).c_str());
 
-    canvas->print("TX: ");
-    canvas->println(enumToString(aSession->mediaState).c_str());
+    canvas.print("TX: ");
+    canvas.println(enumToString(aSession->mediaState).c_str());
   }
 
   void drawSidebar()
   {
     if (aSession->connectionState == A2DPSession::ConnectionState::CONNECTED)
     {
-      sidebar->setCursor(0, CHAR_HEIGHT);
-      sidebar->print("M");
+      sidebar.setCursor(0, CHAR_HEIGHT);
+      sidebar.print("M");
     }
 
-    sidebar->setCursor(1, (sidebar->height() + CHAR_HEIGHT) / 2);
-    sidebar->print("=");
+    sidebar.setCursor(1, (sidebar.height() + CHAR_HEIGHT) / 2);
+    sidebar.print("=");
 
-    sidebar->setCursor(1, sidebar->height());
-    sidebar->print("V");
+    sidebar.setCursor(1, sidebar.height());
+    sidebar.print("V");
 
-    sidebar->drawFastVLine(CHAR_WIDTH + 2, 0, sidebar->height(), 1);
+    sidebar.drawFastVLine(CHAR_WIDTH + 2, 0, sidebar.height(), TFT_WHITE);
   }
 
   void refreshBatteryPercentage()

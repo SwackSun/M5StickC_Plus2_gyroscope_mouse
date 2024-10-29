@@ -21,8 +21,8 @@ using namespace std;
 
 class Menu : public MenuItem, public Drawable
 {
-  GFXcanvas1* headerCanvas;
-  GFXcanvas1* mainCanvas;
+  GFXcanvas1 headerCanvas;
+  GFXcanvas1 mainCanvas;
 
   int scrollPosition = 0;
   int selectedItem = 0;
@@ -33,14 +33,14 @@ class Menu : public MenuItem, public Drawable
 public:
   Menu(CLite_GFX *gfx, string label) : Menu(gfx, label, ""){};
 
-  Menu(CLite_GFX *gfx, string label, string name) : Drawable(gfx), headerCanvas(), mainCanvas(), MenuItem(label, name)
+  Menu(CLite_GFX *gfx, string label, string name) : Drawable(gfx), headerCanvas(gfx), mainCanvas(gfx), MenuItem(label, name)
   {
-    headerCanvas = new GFXcanvas1(gfx);
-    headerCanvas->createSprite(HEADER_WIDTH, gfx->height());
-    headerCanvas->setFont(&TomThumb);
-    mainCanvas = new GFXcanvas1(gfx);
-    mainCanvas->createSprite(gfx->width() - HEADER_WIDTH, gfx->height());
-    mainCanvas->setFont(&TomThumb);
+    headerCanvas.createSprite(HEADER_WIDTH, gfx->height());
+    headerCanvas.setFont(&TomThumb);
+    headerCanvas.setTextSize(1);
+    mainCanvas.createSprite(gfx->width() - HEADER_WIDTH, gfx->height());
+    mainCanvas.setTextSize(1);
+    mainCanvas.setFont(&TomThumb);
     info("Back");
   }
 
@@ -54,11 +54,11 @@ public:
     if (!name.empty())
     {
       drawHeader();
-      drawCanvasToGfx(headerCanvas, 0, 0);
+      drawCanvasToGfx(&headerCanvas, 0, 0);
     }
 
     drawMenu();
-    drawCanvasToGfx(mainCanvas, name.empty() ? 0 : headerCanvas->width() + CHAR_WIDTH, 0);
+    drawCanvasToGfx(&mainCanvas, name.empty() ? 0 : headerCanvas.width() + CHAR_WIDTH, 0);
 
     hasChanged = false;
   }
@@ -148,19 +148,20 @@ protected:
 private:
   void drawHeader()
   {
-    headerCanvas->fillScreen(0);
-    headerCanvas->setRotation(3);
-    headerCanvas->setCursor(0, CHAR_HEIGHT);
-    headerCanvas->print(name.c_str());
-    headerCanvas->drawLine(0, CHAR_HEIGHT + SPACING, headerCanvas->width(), CHAR_HEIGHT + SPACING, 1);
-    headerCanvas->setRotation(0);
+    headerCanvas.fillScreen(0);
+    headerCanvas.setRotation(2);
+    headerCanvas.setCursor(0, CHAR_HEIGHT);
+    headerCanvas.print(name.c_str());
+    headerCanvas.drawLine(0, CHAR_HEIGHT + SPACING, headerCanvas.width(), CHAR_HEIGHT + SPACING, TFT_WHITE);
+    headerCanvas.setRotation(1);
   }
 
   void drawMenu()
   {
-    GFXcanvas1* canvas = new GFXcanvas1(gfx);
-    headerCanvas->createSprite((int32_t)mainCanvas->width(), (int32_t)getItemPosition(menuItems.size()));
-    canvas->setFont(&TomThumb);
+    GFXcanvas1 canvas = GFXcanvas1(gfx);
+    canvas.createSprite((int32_t)mainCanvas.width(), (int32_t)getItemPosition(menuItems.size()));
+    canvas.setFont(&TomThumb);
+    canvas.setTextSize(1);
 
     for (int i(0); i < menuItems.size(); ++i)
     {
@@ -168,19 +169,19 @@ private:
 
       if (i == selectedItem)
       {
-        canvas->print("> ");
+        canvas.print("> ");
       }
       else
       {
-        canvas->setCursor(canvas->getCursorX() + CHAR_WIDTH * 2, canvas->getCursorY());
+        canvas.setCursor(canvas.getCursorX() + CHAR_WIDTH * 2, canvas.getCursorY());
       }
 
-      canvas->println(item->label.c_str());
+      canvas.println(item->label.c_str());
     }
 
-    mainCanvas->fillScreen(0);
-    mainCanvas->setCursor(0, CHAR_HEIGHT);
-    mainCanvas->drawBitmap(0, -scrollPosition, (uint8_t*)canvas->getBuffer(), (int32_t)canvas->width(), (int32_t)canvas->height(), 1, 0);
+    mainCanvas.fillScreen(0);
+    mainCanvas.setCursor(0, CHAR_HEIGHT);
+    canvas.pushSprite(0, -scrollPosition);
   }
 
   void exit()
@@ -191,9 +192,9 @@ private:
   {
     int itemPosition = getItemPosition(item);
 
-    if (itemPosition + CHAR_HEIGHT > scrollPosition + mainCanvas->height())
+    if (itemPosition + CHAR_HEIGHT > scrollPosition + mainCanvas.height())
     {
-      scrollPosition = itemPosition - mainCanvas->height() + CHAR_HEIGHT + 2;
+      scrollPosition = itemPosition - mainCanvas.height() + CHAR_HEIGHT + 2;
     }
     else
     {
@@ -204,13 +205,15 @@ private:
   bool isItemVisible(int item)
   {
     int itemPosition = getItemPosition(item + 1);
-    // ESP_LOGD("", "itemPosition: %d, scrollPosition: %d, mainCanvasHeight: %d", itemPosition, scrollPosition, mainCanvas->height());
-    return itemPosition - CHAR_HEIGHT > scrollPosition && itemPosition < scrollPosition + mainCanvas->height();
+    // ESP_LOGD("", "itemPosition: %d, scrollPosition: %d, mainCanvasHeight: %d", itemPosition, scrollPosition, mainCanvas.height());
+    return itemPosition - CHAR_HEIGHT > scrollPosition && itemPosition < scrollPosition + mainCanvas.height();
   }
 
   void drawCanvasToGfx(GFXcanvas1 *canvas, int x, int y)
   {
-    gfx->drawBitmap(x, y, (uint8_t*)canvas->getBuffer(), (int32_t)canvas->width(), (int32_t)canvas->height(), 1, 0);
+    gfx->startWrite();
+    canvas->pushSprite(x, y);
+    gfx->endWrite();
   }
 
   static int getItemPosition(int item)

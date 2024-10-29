@@ -30,7 +30,7 @@ BluetoothAddress testDevice(esp_bd_addr_t{11, 38, 117, 3, 197, 152});
 const float ADC_MODIFIER = 3.3 / 4095;
 const float BATTERY_MODIFIER = 2 * (3.45 / 4095);
 
-CLite_GFX display;
+CLite_GFX lcd;
 Navigation navigation;
 // BluetoothClient bt;
 
@@ -43,7 +43,7 @@ Menu *mainMenu;
 MenuInfo *analogInputInfo;
 MenuInfo *batteryInfo;
 MenuInfo *cpuInfo;
-VolumeVisalizer visualizer(&display);
+VolumeVisalizer visualizer(&lcd);
 
 void redraw();
 void start();
@@ -55,71 +55,88 @@ int32_t dataCallback(uint8_t *data, int32_t len);
 A2DPSession aSession(dataCallback);
 
 GlobalTicker powerTicker(5000, []() {
-  if (getBatteryPercentage() > 0.15)
-  {
-    if (aSession.connectionState == A2DPSession::ConnectionState::CONNECTED && aSession.mediaState == A2DPSession::MediaState::ACTIVE)
-    {
-      digitalWrite(LED_BUILTIN, HIGH);
-    }
-    else
-    {
-      digitalWrite(LED_BUILTIN, HIGH);
-      vTaskDelay(pdMS_TO_TICKS(20));
-      digitalWrite(LED_BUILTIN, LOW);
-    }
-  }
-  else if (getBatteryPercentage() < 0.15)
-    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+  // if (getBatteryPercentage() > 0.15)
+  // {
+  //   if (aSession.connectionState == A2DPSession::ConnectionState::CONNECTED && aSession.mediaState == A2DPSession::MediaState::ACTIVE)
+  //   {
+  //     digitalWrite(LED_BUILTIN, HIGH);
+  //   }
+  //   else
+  //   {
+  //     digitalWrite(LED_BUILTIN, HIGH);
+  //     vTaskDelay(pdMS_TO_TICKS(20));
+  //     digitalWrite(LED_BUILTIN, LOW);
+  //   }
+  // }
+  // else if (getBatteryPercentage() < 0.15)
+  //   digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
 });
 
 GlobalTicker refreshInfo(5000, []() {
-  char bV[50];
-  sprintf(bV, "Battery: %.2fv", analogRead(BATTERY_PIN) * BATTERY_MODIFIER);
-  batteryInfo->label = string(bV);
+  // char bV[50];
+  // sprintf(bV, "Battery: %.2fv", analogRead(BATTERY_PIN) * BATTERY_MODIFIER);
+  // batteryInfo->label = string(bV);
 
-  char cI[50];
-  sprintf(cI, "CPU: %dMHz", getCpuFrequencyMhz());
-  cpuInfo->label = string(cI);
+  // char cI[50];
+  // sprintf(cI, "CPU: %dMHz", getCpuFrequencyMhz());
+  // cpuInfo->label = string(cI);
 });
 
 void setup()
 {
-  M5_Board::hardware_init();
-  display.begin();
-  display.setRotation(3);
-  LGFX_Sprite *Disbuff = new LGFX_Sprite(&display);
-  Disbuff->createSprite(display.width(), display.height());
-  // Hardware 
-  //setCpuFrequencyMhz(80);
-  Serial.begin(115200);
-  printf("OLED FeatherWing test\n");
-
-  ESP_LOGD("", "I2C Freq: %d", Wire.getClock());
-  pinMode(MICROPHONE_PIN, INPUT);
-  pinMode(BATTERY_PIN, INPUT);
-  pinMode(BUILTIN_LED, OUTPUT);
-
+  /* Hold pwr pin */
+  gpio_reset_pin((gpio_num_t)POWER_HOLD_PIN);
+  pinMode(POWER_HOLD_PIN, OUTPUT);
+  digitalWrite(POWER_HOLD_PIN, HIGH);
+  lcd.begin();
+  lcd.setRotation(1);
+  printf("Demo...\r\n");
   // NVS & Storage
-  esp_err_t ret = nvs_flash_init();
-  if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-  {
-    printf("======>nvs_flash_erase...\n");
-    ESP_ERROR_CHECK(nvs_flash_erase());
-    ret = nvs_flash_init();
-  }
-  ESP_ERROR_CHECK(ret);
-  storage.init();
+  // esp_err_t ret = nvs_flash_init();
+  // if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+  // {
+  //   printf("======>nvs_flash_erase...\n");
+  //   ESP_ERROR_CHECK(nvs_flash_erase());
+  //   ret = nvs_flash_init();
+  // }
+  // ESP_ERROR_CHECK(ret);
+  // storage.init();
 
   // Display
-  display.setFont(&TomThumb);
-  display.setTextColor(WHITE);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, LOGO, 128, 32, 1);
-  display.display();
+  lcd.setBrightness(255);
+  lcd.fillScreen(TFT_BLACK);
+  lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+  lcd.setTextSize(1);
+  lcd.setTextColor(TFT_WHITE);
+  lcd.clearDisplay();
+  lcd.drawBitmap(0, 0, LOGO, 128, 32, TFT_WHITE);
+  lcd.display();
+//   lcd.setCursor(10, 42);
+//   lcd.printf("hello world!");
+// vTaskDelay(pdMS_TO_TICKS(2000));
+//     lcd.clearDisplay();
+//     GFXcanvas1 canvas = GFXcanvas1(&lcd);
+//     canvas.createSprite(lcd.width(), lcd.height());
+//     canvas.fillScreen(0);
+//     //canvas.setTextColor(TFT_WHITE, TFT_BLACK);
+//     canvas.setFont(&TomThumb);
+//     canvas.setCursor(0, 0);
+//     canvas.setTextSize(1);
+//     canvas.print("X");
+//     //canvas.drawFastHLine(0, CHAR_HEIGHT + 2, canvas.width(), TFT_WHITE);
+//     printf("%d,%d,%d\r\n",(int32_t)canvas.width(), (int32_t)canvas.height(),(int32_t)canvas.bufferLength());
+//     printf("==end\r\n");
+//     lcd.startWrite();
+//     lcd.println("Display");
+//     canvas.pushSprite(0,0);
+//     lcd.endWrite();
+    
+
+  // while(1);
 
   // Views
-  mainMenu = new Menu(&display, "Main Menu", "Main");
-  homeView = new HomeView(&display, mainMenu, &visualizer, &aSession);
+  mainMenu = new Menu(&lcd, "Main Menu", "Main");
+  homeView = new HomeView(&lcd, mainMenu, &visualizer, &aSession);
   navigation.navigateTo(homeView);
 
   // Menus
@@ -133,9 +150,9 @@ void setup()
   batteryInfo = infoMenu->info("Battery: ?");
   cpuInfo = infoMenu->info("CPU: ?");
   infoMenu->command("Draw logo", []() {
-    display.clearDisplay();
-    display.drawBitmap(0, 0, LOGO, 128, 32, 1);
-    display.display();
+    lcd.clearDisplay();
+    lcd.drawBitmap(0, 0, LOGO, 128, 32, TFT_WHITE);
+    lcd.display();
   });
   mainMenu->command("Turn off", []() { turnOff(); });
 
@@ -148,34 +165,34 @@ void setup()
   buttonC.onPressed([]() { navigation.input(KEY_C); });
 
   // Timers
-  powerTicker.start();
-  refreshInfo.start();
+  // powerTicker.start();
+  // refreshInfo.start();
 
   // Initializations
-  activateBluetooth();
-  audio_init();
+  // activateBluetooth();
+  // audio_init();
 
-  aSession.start(storage.getActiveDevice().address);
+  // aSession.start(storage.getActiveDevice().address);
 
-  //Init finished, clear display
-  vTaskDelay(pdMS_TO_TICKS(100));
-  display.clearDisplay();
-  display.display();
+  //Init finished, clear lcd
+  vTaskDelay(pdMS_TO_TICKS(2000));
+  lcd.clearDisplay();
+  lcd.display();
 }
 
 void redraw()
 {
   // static portMUX_TYPE drawMutex = portMUX_INITIALIZER_UNLOCKED;
-  display.clearDisplay();
+  lcd.clearDisplay();
   navigation.draw();
-  display.display();
+  lcd.display();
   // portENTER_CRITICAL(&drawMutex);
   // portEXIT_CRITICAL(&drawMutex);
 }
 
 void loop()
 {
-  GlobalTicker::updateAll();
+  //GlobalTicker::updateAll();
 
   buttonA.read();
   buttonB.read();

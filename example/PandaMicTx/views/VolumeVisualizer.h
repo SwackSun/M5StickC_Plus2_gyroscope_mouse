@@ -31,11 +31,11 @@ public:
   {
     int width = gfx->width() * volume;
     gfx->fillScreen(0);
-    gfx->fillRect(gfx->width() - width, 0, width, gfx->height(), 1);
+    gfx->fillRect(gfx->width() - width, 0, width, gfx->height(), TFT_WHITE);
     // canvas.setCursor(1, 5);
     // canvas.println(volume);
     //
-    // gfx->drawBitmap(0, 0, canvas.getBuffer(), canvas.width(), canvas.height(), 1);
+    // gfx->drawBitmap(0, 0, canvas.getBuffer(), canvas.width(), canvas.height(), TFT_WHITE);
   }
 
   virtual NavigationCommand *input(int key)

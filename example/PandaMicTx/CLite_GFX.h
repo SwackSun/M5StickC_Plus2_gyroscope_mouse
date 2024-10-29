@@ -25,6 +25,16 @@ class CLite_GFX : public lgfx::LGFX_Device
     lgfx::Light_PWM _light_instance;
 
 public:
+    int width(void)
+    {
+        return 128;
+    } 
+
+    int height(void)
+    {
+        return 32;
+    }  
+
     CLite_GFX(void)
     {
         {
@@ -74,32 +84,23 @@ public:
 
 typedef LGFX_Sprite GFXcanvas1;
 
-class M5_Board
-{
-public:
-    M5_Board()
-    {
-    }
+// class GFXcanvas1 : public lgfx::v1::LGFX_Sprite
+// {
+// private: 
 
-    static void hardware_init()
-    {
-        /* Hold pwr pin */
-        gpio_reset_pin((gpio_num_t)POWER_HOLD_PIN);
-        pinMode(POWER_HOLD_PIN, OUTPUT);
-        digitalWrite(POWER_HOLD_PIN, HIGH);
+// public:
+//     GFXcanvas1()
+//     {
 
-        Wire1.begin(I2C_SDA_PIN, I2C_SCL_PIN);
-    }
+//     }
 
-    static void power_off()
-    {
-        printf("power off\n");
-        digitalWrite(POWER_HOLD_PIN, 0);
-        delay(10000);
+//     GFXcanvas1(int width,int height)
+//     {
 
-        while (1)
-        {
-            delay(1000);
-        }
-    }
-};
+//     }
+
+//     virtual ~GFXcanvas1()
+//     {
+        
+//     }
+// }
