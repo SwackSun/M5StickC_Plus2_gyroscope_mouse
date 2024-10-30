@@ -1,3 +1,16 @@
+# Changes to build PandaMicTxMiniUI
+
+![](miniUI-1.png)
+
+1.Add porject of example\PandaMicTxMiniUI
+
+2.Edit `platformio.ini` and set `default_envs` with `PandaMicTxMiniUI`, like:
+```
+[platformio]
+default_envs = PandaMicTxMiniUI
+```
+3.build and Upload
+
 # Changes to build gyroscope_mouse
 
 1.Add porject of example\gyroscope_mouse
