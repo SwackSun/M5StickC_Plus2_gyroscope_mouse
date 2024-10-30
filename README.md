@@ -1,6 +1,6 @@
 # Changes to build PandaMicTxMiniUI
 
-![](miniUI-1.png)
+![](images/miniUI-1.png)
 
 1.Add porject of example\PandaMicTxMiniUI
 
