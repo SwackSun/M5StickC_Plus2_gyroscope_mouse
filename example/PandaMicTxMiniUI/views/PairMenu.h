@@ -2,7 +2,7 @@
 #define _PAIR_MENU_H
 
 #include <DiscoverySession.h>
-#include <Menu.h>
+#include "Navigation/Menu.h"
 #include "storage/Storage.h"
 #include "PairCommand.h"
 

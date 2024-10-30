@@ -3,10 +3,10 @@
 #include <EasyButton.h>
 #include <Wire.h>
 #include "CLite_GFX.h"
-#include <Navigation.h>
+#include "Navigation/Navigation.h"
+#include "Navigation/Menu.h"
 #include <BluetoothClient.h>
 #include <A2DPSession.h>
-#include <Menu.h>
 #include <esp_pm.h>
 #include "constants.h"
 #include "audio_in.h"

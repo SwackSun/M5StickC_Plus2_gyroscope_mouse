@@ -1,8 +1,8 @@
 #ifndef _HOME_VIEW_H
 #define _HOME_VIEW_H
 
-#include <Drawable.h>
 #include <A2DPSession.h>
+#include "Navigation/Drawable.h"
 #include "GlobalTicker.h"
 #include "utils.h"
 #include "enum_strings.h"

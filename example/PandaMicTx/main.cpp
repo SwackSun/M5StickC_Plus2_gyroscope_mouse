@@ -3,10 +3,10 @@
 #include <EasyButton.h>
 #include <Wire.h>
 #include "CLite_GFX.h"
-#include <Navigation.h>
+#include "Navigation/Navigation.h"
+#include "Navigation/Menu.h"
 #include <BluetoothClient.h>
 #include <A2DPSession.h>
-#include <Menu.h>
 #include <esp_pm.h>
 #include "constants.h"
 #include "audio_in.h"
@@ -111,29 +111,7 @@ void setup()
   lcd.clearDisplay();
   lcd.drawBitmap(0, 0, LOGO, 128, 32, TFT_WHITE);
   lcd.display();
-//   lcd.setCursor(10, 42);
-//   lcd.printf("hello world!");
-// vTaskDelay(pdMS_TO_TICKS(2000));
-//     lcd.clearDisplay();
-//     GFXcanvas1 canvas = GFXcanvas1(&lcd);
-//     canvas.createSprite(lcd.width(), lcd.height());
-//     canvas.fillScreen(0);
-//     //canvas.setTextColor(TFT_WHITE, TFT_BLACK);
-//     canvas.setFont(&TomThumb);
-//     canvas.setCursor(0, 0);
-//     canvas.setTextSize(1);
-//     canvas.print("X");
-//     //canvas.drawFastHLine(0, CHAR_HEIGHT + 2, canvas.width(), TFT_WHITE);
-//     printf("%d,%d,%d\r\n",(int32_t)canvas.width(), (int32_t)canvas.height(),(int32_t)canvas.bufferLength());
-//     printf("==end\r\n");
-//     lcd.startWrite();
-//     lcd.println("Display");
-//     canvas.pushSprite(0,0);
-//     lcd.endWrite();
-    
-
-  // while(1);
-
+  
   // Views
   mainMenu = new Menu(&lcd, "Main Menu", "Main");
   homeView = new HomeView(&lcd, mainMenu, &visualizer, &aSession);

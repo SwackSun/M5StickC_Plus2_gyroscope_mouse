@@ -25,16 +25,6 @@ class CLite_GFX : public lgfx::LGFX_Device
     lgfx::Light_PWM _light_instance;
 
 public:
-    int width(void)
-    {
-        return 128;
-    } 
-
-    int height(void)
-    {
-        return 32;
-    }  
-
     CLite_GFX(void)
     {
         {

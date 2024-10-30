@@ -1,7 +1,7 @@
 #ifndef _PAIR_COMMAND_H
 #define _PAIR_COMMAND_H
 
-#include <MenuCommand.h>
+#include "Navigation/MenuCommand.h"
 #include "storage/Storage.h"
 
 class PairCommand : public MenuCommand

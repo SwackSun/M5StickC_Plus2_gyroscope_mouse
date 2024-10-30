@@ -2,7 +2,7 @@
 #define _DRAWABLE_H
 
 #include <CLite_GFX.h>
-#include <NavigationCommand.h>
+#include "NavigationCommand.h"
 
 #define KEY_A 0
 #define KEY_B 1
