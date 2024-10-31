@@ -1,7 +1,7 @@
 #ifndef _DRAWABLE_H
 #define _DRAWABLE_H
 
-#include <CLite_GFX.h>
+#include "CLite_GFX.h"
 #include "NavigationCommand.h"
 
 #define KEY_A 0

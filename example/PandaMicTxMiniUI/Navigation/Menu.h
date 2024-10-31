@@ -2,7 +2,7 @@
 #define _MENU_H
 
 #include <iostream>
-#include <CLite_GFX.h>
+#include "CLite_GFX.h"
 #include "Menu.h"
 #include "MenuItem.h"
 #include "MenuCommand.h"
