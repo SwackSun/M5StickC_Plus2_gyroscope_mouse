@@ -11,7 +11,7 @@
 #include "Drawable.h"
 
 #define CHAR_HEIGHT 12
-#define CHAR_WIDTH 6
+#define CHAR_WIDTH 8
 #define LINE_WIDTH 1
 #define SPACING 1
 
@@ -148,7 +148,7 @@ private:
   {
     headerCanvas.fillScreen(0);
     headerCanvas.setRotation(3);
-    headerCanvas.setCursor(0, 0);
+    headerCanvas.setCursor(0, CHAR_HEIGHT);
     headerCanvas.print(name.c_str());
     headerCanvas.drawLine(0, CHAR_HEIGHT + SPACING, headerCanvas.width(), CHAR_HEIGHT + SPACING, 1);
     headerCanvas.setRotation(0);
@@ -159,6 +159,7 @@ private:
     GFXcanvas1 canvas(mainCanvas.width(), getItemPosition(menuItems.size()));
     canvas.setFont(&TomThumb2);
     canvas.setTextSize(2);
+    canvas.setCursor(0, CHAR_HEIGHT);
 
     for (int i(0); i < menuItems.size(); ++i)
     {

@@ -10,7 +10,7 @@
 #include "Navigation/Picopixel.h"
 
 #define CHAR_HEIGHT 12
-#define CHAR_WIDTH 6
+#define CHAR_WIDTH 8
 
 #define SIDEBAR_WIDTH CHAR_WIDTH + 5
 
@@ -125,9 +125,9 @@ private:
     char bV[50];
 
     // Header
-    canvas.setCursor(0, 0);
+    canvas.setCursor(0, CHAR_HEIGHT);
     canvas.print(":: PANDA MICROPHONE");
-    canvas.setCursor(canvas.width() - CHAR_WIDTH * 5, 0);
+    canvas.setCursor(canvas.width() - CHAR_WIDTH * 5, CHAR_HEIGHT);
     sprintf(bV, "%d%%", batteryPercentage);
     canvas.print(bV);
     canvas.drawFastHLine(0, CHAR_HEIGHT + 2, canvas.width(), 1);
