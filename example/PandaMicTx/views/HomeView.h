@@ -1,16 +1,16 @@
 #ifndef _HOME_VIEW_H
 #define _HOME_VIEW_H
 
-#include <Fonts/Picopixel.h>
 #include <A2DPSession.h>
 #include "Navigation/Drawable.h"
 #include "GlobalTicker.h"
 #include "utils.h"
 #include "enum_strings.h"
 #include "storage/Storage.h"
+#include "Navigation/Picopixel.h"
 
-#define CHAR_HEIGHT 5
-#define CHAR_WIDTH 5
+#define CHAR_HEIGHT 12
+#define CHAR_WIDTH 6
 
 #define SIDEBAR_WIDTH CHAR_WIDTH + 5
 
@@ -42,8 +42,10 @@ public:
         screenTicker(
             30000, [&]() { screenOff(); }, 1)
   {
-    // sidebar.setFont(&Picopixel);
-    // canvas.setFont(&Picopixel);
+    sidebar.setFont(&Picopixel);
+    sidebar.setTextSize(2);
+    canvas.setFont(&Picopixel);
+    canvas.setTextSize(2);
     refreshBatteryPercentage();
   }
 
@@ -123,9 +125,9 @@ private:
     char bV[50];
 
     // Header
-    canvas.setCursor(0, CHAR_HEIGHT);
+    canvas.setCursor(0, 0);
     canvas.print(":: PANDA MICROPHONE");
-    canvas.setCursor(canvas.width() - CHAR_WIDTH * 5, CHAR_HEIGHT);
+    canvas.setCursor(canvas.width() - CHAR_WIDTH * 5, 0);
     sprintf(bV, "%d%%", batteryPercentage);
     canvas.print(bV);
     canvas.drawFastHLine(0, CHAR_HEIGHT + 2, canvas.width(), 1);

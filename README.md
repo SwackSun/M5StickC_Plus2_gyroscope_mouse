@@ -1,5 +1,7 @@
 # Changes to build PandaMicTx
 
+## Chage to Adafruit_GFX_Library
+
 The PandaMicTx UI is not used `LGFX_Sprite`
 
 The reason is that `LGFX_Sprite` seems to have a memory limit
@@ -9,6 +11,18 @@ The reason is that `LGFX_Sprite` seems to have a memory limit
 Original post：https://forums.adafruit.com/viewtopic.php?t=210140
 
 So use GFXcanvas1 from Adafruit_GFX_Library
+
+## undef setFont
+
+.pio\libdeps\PandaMicTx\M5GFX\src\M5GFX.h
+
+```
+// #ifdef setFont
+// #undef setFont
+// #endif
+```
+
+## build
 
 1.Add porject of example\PandaMicTx
 

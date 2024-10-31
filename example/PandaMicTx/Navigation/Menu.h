@@ -2,6 +2,7 @@
 #define _MENU_H
 
 #include <iostream>
+#include "Navigation/TomThumb2.h"
 #include "Menu.h"
 #include "MenuItem.h"
 #include "MenuCommand.h"
@@ -9,8 +10,8 @@
 #include "NavigationCommand.h"
 #include "Drawable.h"
 
-#define CHAR_HEIGHT 5
-#define CHAR_WIDTH 3
+#define CHAR_HEIGHT 12
+#define CHAR_WIDTH 6
 #define LINE_WIDTH 1
 #define SPACING 1
 
@@ -34,8 +35,10 @@ public:
 
   Menu(CLite_GFX *gfx, string label, string name) : Drawable(gfx), headerCanvas(HEADER_WIDTH, gfx->height()), mainCanvas(gfx->width() - HEADER_WIDTH, gfx->height()), MenuItem(label, name)
   {
-    // headerCanvas.setFont(&TomThumb);
-    // mainCanvas.setFont(&TomThumb);
+    headerCanvas.setFont(&TomThumb2);
+    headerCanvas.setTextSize(2);
+    mainCanvas.setFont(&TomThumb2);
+    mainCanvas.setTextSize(2);
     info("Back");
   }
 
@@ -145,7 +148,7 @@ private:
   {
     headerCanvas.fillScreen(0);
     headerCanvas.setRotation(3);
-    headerCanvas.setCursor(0, CHAR_HEIGHT);
+    headerCanvas.setCursor(0, 0);
     headerCanvas.print(name.c_str());
     headerCanvas.drawLine(0, CHAR_HEIGHT + SPACING, headerCanvas.width(), CHAR_HEIGHT + SPACING, 1);
     headerCanvas.setRotation(0);
@@ -154,7 +157,8 @@ private:
   void drawMenu()
   {
     GFXcanvas1 canvas(mainCanvas.width(), getItemPosition(menuItems.size()));
-    // canvas.setFont(&TomThumb);
+    canvas.setFont(&TomThumb2);
+    canvas.setTextSize(2);
 
     for (int i(0); i < menuItems.size(); ++i)
     {

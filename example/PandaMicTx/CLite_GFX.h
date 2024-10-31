@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
-#include <M5GFX.h>
 #include <Adafruit_GFX.h>
+#include <M5GFX.h>
 #include <lgfx/v1/panel/Panel_ST7789.hpp>
 #include <Button.h>
 #include <Wire.h>
