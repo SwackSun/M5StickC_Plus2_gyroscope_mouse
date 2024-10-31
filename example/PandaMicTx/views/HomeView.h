@@ -1,6 +1,7 @@
 #ifndef _HOME_VIEW_H
 #define _HOME_VIEW_H
 
+#include <Fonts/Picopixel.h>
 #include <A2DPSession.h>
 #include "Navigation/Drawable.h"
 #include "GlobalTicker.h"
@@ -35,18 +36,14 @@ public:
         mainMenu(mainMenu),
         visualizer(visualizer),
         aSession(aSession),
-        sidebar(gfx), canvas(gfx),
+        sidebar(SIDEBAR_WIDTH, gfx->height()), canvas(gfx->width() - SIDEBAR_WIDTH, gfx->height()),
         batteryTicker(1000, [&]() { refreshBatteryPercentage(); }),
         refreshTicker(250, [&]() { hasChanged = true; }),
         screenTicker(
             30000, [&]() { screenOff(); }, 1)
   {
-    sidebar.createSprite(SIDEBAR_WIDTH, gfx->height());
-    sidebar.setFont(&TomThumb);
-    sidebar.setTextSize(1);
-    canvas.createSprite(gfx->width() - SIDEBAR_WIDTH, gfx->height());
-    canvas.setFont(&TomThumb);
-    canvas.setTextSize(1);
+    // sidebar.setFont(&Picopixel);
+    // canvas.setFont(&Picopixel);
     refreshBatteryPercentage();
   }
 
@@ -66,10 +63,8 @@ public:
     drawCanvas();
     drawSidebar();
 
-    gfx->startWrite();
-    canvas.pushSprite(SIDEBAR_WIDTH, 0);
-    sidebar.pushSprite(0, 0);
-    gfx->endWrite();
+    gfx->drawBitmap(SIDEBAR_WIDTH, 0, canvas.getBuffer(), canvas.width(), canvas.height(), TFT_WHITE, 0);
+    gfx->drawBitmap(0, 0, sidebar.getBuffer(), sidebar.width(), sidebar.height(), TFT_WHITE, 0);
     hasChanged = false;
   }
 
@@ -128,12 +123,12 @@ private:
     char bV[50];
 
     // Header
-    canvas.setCursor(0, 0);
+    canvas.setCursor(0, CHAR_HEIGHT);
     canvas.print(":: PANDA MICROPHONE");
-    canvas.setCursor(canvas.width() - CHAR_WIDTH * 5, 0);
+    canvas.setCursor(canvas.width() - CHAR_WIDTH * 5, CHAR_HEIGHT);
     sprintf(bV, "%d%%", batteryPercentage);
     canvas.print(bV);
-    canvas.drawFastHLine(0, CHAR_HEIGHT + 2, canvas.width(), TFT_WHITE);
+    canvas.drawFastHLine(0, CHAR_HEIGHT + 2, canvas.width(), 1);
 
     canvas.setCursor(0, CHAR_HEIGHT * 2 + 3);
     canvas.println(storage.getActiveDevice().name);
@@ -159,7 +154,7 @@ private:
     sidebar.setCursor(1, sidebar.height());
     sidebar.print("V");
 
-    sidebar.drawFastVLine(CHAR_WIDTH + 2, 0, sidebar.height(), TFT_WHITE);
+    sidebar.drawFastVLine(CHAR_WIDTH + 2, 0, sidebar.height(), 1);
   }
 
   void refreshBatteryPercentage()
@@ -189,3 +184,4 @@ private:
 };
 
 #endif
+

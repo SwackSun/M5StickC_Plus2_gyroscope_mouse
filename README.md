@@ -1,4 +1,25 @@
-# Changes to build PandaMicTxMiniUI
+# Changes to build PandaMicTx
+
+The PandaMicTx UI is not used `LGFX_Sprite`
+
+The reason is that `LGFX_Sprite` seems to have a memory limit
+
+>GFX library. However, it seems to be limited to a buffer size of 27840 bytes
+
+Original post：https://forums.adafruit.com/viewtopic.php?t=210140
+
+So use GFXcanvas1 from Adafruit_GFX_Library
+
+1.Add porject of example\PandaMicTx
+
+2.Edit `platformio.ini` and set `default_envs` with `PandaMicTx`, like:
+```
+[platformio]
+default_envs = PandaMicTx
+```
+3.build and Upload
+
+# Changes to build PandaMicTx
 
 ![](images/miniUI-1.png)
 

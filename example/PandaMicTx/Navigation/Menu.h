@@ -2,7 +2,6 @@
 #define _MENU_H
 
 #include <iostream>
-#include <CLite_GFX.h>
 #include "Menu.h"
 #include "MenuItem.h"
 #include "MenuCommand.h"
@@ -33,14 +32,10 @@ class Menu : public MenuItem, public Drawable
 public:
   Menu(CLite_GFX *gfx, string label) : Menu(gfx, label, ""){};
 
-  Menu(CLite_GFX *gfx, string label, string name) : Drawable(gfx), headerCanvas(gfx), mainCanvas(gfx), MenuItem(label, name)
+  Menu(CLite_GFX *gfx, string label, string name) : Drawable(gfx), headerCanvas(HEADER_WIDTH, gfx->height()), mainCanvas(gfx->width() - HEADER_WIDTH, gfx->height()), MenuItem(label, name)
   {
-    headerCanvas.createSprite(HEADER_WIDTH, gfx->height());
-    headerCanvas.setFont(&TomThumb);
-    headerCanvas.setTextSize(1);
-    mainCanvas.createSprite(gfx->width() - HEADER_WIDTH, gfx->height());
-    mainCanvas.setFont(&TomThumb);
-    mainCanvas.setTextSize(1);
+    // headerCanvas.setFont(&TomThumb);
+    // mainCanvas.setFont(&TomThumb);
     info("Back");
   }
 
@@ -150,18 +145,16 @@ private:
   {
     headerCanvas.fillScreen(0);
     headerCanvas.setRotation(3);
-    headerCanvas.setCursor(0, 0);
+    headerCanvas.setCursor(0, CHAR_HEIGHT);
     headerCanvas.print(name.c_str());
-    headerCanvas.drawLine(0, CHAR_HEIGHT + SPACING, headerCanvas.width(), CHAR_HEIGHT + SPACING, TFT_WHITE);
+    headerCanvas.drawLine(0, CHAR_HEIGHT + SPACING, headerCanvas.width(), CHAR_HEIGHT + SPACING, 1);
     headerCanvas.setRotation(0);
   }
 
   void drawMenu()
   {
-    GFXcanvas1 canvas = GFXcanvas1(&mainCanvas);
-    canvas.createSprite((int32_t)mainCanvas.width(), (int32_t)getItemPosition(menuItems.size()));
-    canvas.setFont(&TomThumb);
-    canvas.setTextSize(1);
+    GFXcanvas1 canvas(mainCanvas.width(), getItemPosition(menuItems.size()));
+    // canvas.setFont(&TomThumb);
 
     for (int i(0); i < menuItems.size(); ++i)
     {
@@ -181,7 +174,7 @@ private:
 
     mainCanvas.fillScreen(0);
     mainCanvas.setCursor(0, CHAR_HEIGHT);
-    canvas.pushSprite(0, -scrollPosition);
+    mainCanvas.drawBitmap(0, -scrollPosition, canvas.getBuffer(), canvas.width(), canvas.height(), TFT_WHITE, 0);
   }
 
   void exit()
@@ -211,9 +204,7 @@ private:
 
   void drawCanvasToGfx(GFXcanvas1 *canvas, int x, int y)
   {
-    gfx->startWrite();
-    canvas->pushSprite(x, y);
-    gfx->endWrite();
+    gfx->drawBitmap(x, y, canvas->getBuffer(), canvas->width(), canvas->height(), TFT_WHITE, 0);
   }
 
   static int getItemPosition(int item)

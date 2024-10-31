@@ -1,7 +1,6 @@
 #ifndef _VOLUME_VISUALIZER_H
 #define _VOLUME_VISUALIZER_H
 
-#include "CLite_GFX.h"
 #include "Navigation/Drawable.h"
 
 class VolumeVisalizer : public Drawable

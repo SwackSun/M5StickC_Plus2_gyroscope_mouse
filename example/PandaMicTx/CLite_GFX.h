@@ -1,21 +1,10 @@
 #pragma once
 #include <Arduino.h>
 #include <M5GFX.h>
+#include <Adafruit_GFX.h>
 #include <lgfx/v1/panel/Panel_ST7789.hpp>
 #include <Button.h>
 #include <Wire.h>
-#include <MPU6886.h>
-
-#include <BLE2902.h>
-#include <BLEDevice.h>
-#include <BLEServer.h>
-#include <BLEUtils.h>
-#include <WiFi.h>
-#include <HTTPClient.h>
-
-#include <cplus_RTC.h>
-
-#include <esp_wifi.h>
 #include "constants.h"
 
 class CLite_GFX : public lgfx::LGFX_Device
@@ -72,25 +61,3 @@ public:
     }
 };
 
-typedef LGFX_Sprite GFXcanvas1;
-
-// class GFXcanvas1 : public lgfx::v1::LGFX_Sprite
-// {
-// private: 
-
-// public:
-//     GFXcanvas1()
-//     {
-
-//     }
-
-//     GFXcanvas1(int width,int height)
-//     {
-
-//     }
-
-//     virtual ~GFXcanvas1()
-//     {
-        
-//     }
-// }
