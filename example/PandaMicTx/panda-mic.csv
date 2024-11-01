@@ -1,4 +1,4 @@
 key,type,encoding,value
 panda-mic,namespace,,
-version,data,u8,1
-data,data,string,"123"
+version,data,u32,1
+data,data,binary,

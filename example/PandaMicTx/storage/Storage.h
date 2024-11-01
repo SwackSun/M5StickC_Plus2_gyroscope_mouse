@@ -68,7 +68,7 @@ private:
   {
     uint32_t version = 0;
     ESP_ERROR_CHECK_WITHOUT_ABORT(nvs_get_u32(_nvs_handle, "version", &version));
-    ESP_LOGD("", "Load Storage: Current version is %d - found %d.", VERSION, version);
+    ESP_LOGD("", "Load Storage: Current version is %d but read %d.", VERSION, version);
     if (version != VERSION)
       return;
 

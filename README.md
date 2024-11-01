@@ -5,8 +5,10 @@ PandaMicTx UI is like PandaMicTxUI
 intsall script rely on `esp_idf_nvs_partition_gen`
 
 ```
-C:\Users\cs\.platformio\penv\Scripts\python.exe -m pip install --upgrade pip
- C:\Users\cs\.platformio\penv\Scripts\python.exe -m pip install esp_idf_nvs_partition_gen
+C:\Users\swack\.platformio\penv\Scripts\python.exe -m pip install --upgrade pip
+C:\Users\swack\.platformio\penv\Scripts\python.exe -m pip install esp_idf_nvs_partition_gen
+
+C:\Users\swack\.platformio\penv\Scripts\python.exe -m pip install esptool
 ```
 
 ## build
