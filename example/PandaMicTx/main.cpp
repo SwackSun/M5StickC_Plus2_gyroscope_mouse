@@ -55,31 +55,31 @@ int32_t dataCallback(uint8_t *data, int32_t len);
 A2DPSession aSession(dataCallback);
 
 GlobalTicker powerTicker(5000, []() {
-  // if (getBatteryPercentage() > 0.15)
-  // {
-  //   if (aSession.connectionState == A2DPSession::ConnectionState::CONNECTED && aSession.mediaState == A2DPSession::MediaState::ACTIVE)
-  //   {
-  //     digitalWrite(LED_BUILTIN, HIGH);
-  //   }
-  //   else
-  //   {
-  //     digitalWrite(LED_BUILTIN, HIGH);
-  //     vTaskDelay(pdMS_TO_TICKS(20));
-  //     digitalWrite(LED_BUILTIN, LOW);
-  //   }
-  // }
-  // else if (getBatteryPercentage() < 0.15)
-  //   digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+  if (getBatteryPercentage() > 0.15)
+  {
+    if (aSession.connectionState == A2DPSession::ConnectionState::CONNECTED && aSession.mediaState == A2DPSession::MediaState::ACTIVE)
+    {
+      digitalWrite(LED_BUILTIN, HIGH);
+    }
+    else
+    {
+      digitalWrite(LED_BUILTIN, HIGH);
+      vTaskDelay(pdMS_TO_TICKS(20));
+      digitalWrite(LED_BUILTIN, LOW);
+    }
+  }
+  else if (getBatteryPercentage() < 0.15)
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
 });
 
 GlobalTicker refreshInfo(5000, []() {
-  // char bV[50];
-  // sprintf(bV, "Battery: %.2fv", analogRead(BATTERY_PIN) * BATTERY_MODIFIER);
-  // batteryInfo->label = string(bV);
+  char bV[50];
+  sprintf(bV, "Battery: %.2fv", analogRead(BATTERY_PIN) * BATTERY_MODIFIER);
+  batteryInfo->label = string(bV);
 
-  // char cI[50];
-  // sprintf(cI, "CPU: %dMHz", getCpuFrequencyMhz());
-  // cpuInfo->label = string(cI);
+  char cI[50];
+  sprintf(cI, "CPU: %dMHz", getCpuFrequencyMhz());
+  cpuInfo->label = string(cI);
 });
 
 void setup()
@@ -91,16 +91,17 @@ void setup()
   lcd.begin();
   lcd.setRotation(1);
   printf("Demo...\r\n");
+  vTaskDelay(pdMS_TO_TICKS(2002));
   // NVS & Storage
-  // esp_err_t ret = nvs_flash_init();
-  // if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-  // {
-  //   printf("======>nvs_flash_erase...\n");
-  //   ESP_ERROR_CHECK(nvs_flash_erase());
-  //   ret = nvs_flash_init();
-  // }
-  // ESP_ERROR_CHECK(ret);
-  // storage.init();
+  esp_err_t ret = nvs_flash_init();
+  if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+  {
+    printf("======>nvs_flash_erase...\n");
+    ESP_ERROR_CHECK(nvs_flash_erase());
+    ret = nvs_flash_init();
+  }
+  ESP_ERROR_CHECK(ret);
+  storage.init();
 
   // Display
   lcd.setBrightness(255);
@@ -144,8 +145,8 @@ void setup()
   buttonC.onPressed([]() { navigation.input(KEY_C); });
 
   // Timers
-  // powerTicker.start();
-  // refreshInfo.start();
+  powerTicker.start();
+  refreshInfo.start();
 
   // Initializations
   // activateBluetooth();
@@ -171,7 +172,7 @@ void redraw()
 
 void loop()
 {
-  //GlobalTicker::updateAll();
+  GlobalTicker::updateAll();
 
   buttonA.read();
   buttonB.read();
