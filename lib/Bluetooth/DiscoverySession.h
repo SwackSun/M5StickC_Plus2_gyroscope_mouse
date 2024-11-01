@@ -70,7 +70,7 @@ public:
 
     // set discoverable and connectable mode
     // err = esp_bt_gap_set_scan_mode(ESP_BT_SCAN_MODE);
-    ESP_ERROR_CHECK(esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE,ESP_BT_GENERAL_DISCOVERABLE));
+    ESP_ERROR_CHECK(esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE, ESP_BT_GENERAL_DISCOVERABLE));
     ESP_ERROR_CHECK(esp_bt_gap_start_discovery(ESP_BT_INQ_MODE_GENERAL_INQUIRY, 0x30, 0));
 
     // This function starts Inquiry and Name Discovery
@@ -91,7 +91,7 @@ public:
     keepActive = false;
     esp_err_t err = esp_bt_gap_cancel_discovery();
     ESP_ERROR_CHECK(err);
-    ESP_ERROR_CHECK(esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE,ESP_BT_GENERAL_DISCOVERABLE));
+    ESP_ERROR_CHECK(esp_bt_gap_set_scan_mode(ESP_BT_NON_CONNECTABLE, ESP_BT_NON_DISCOVERABLE));
 
     ESP_LOGD(DS_TAG, "Stopped discovery sesssion.");
     return true;
