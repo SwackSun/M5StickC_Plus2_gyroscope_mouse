@@ -1,26 +1,6 @@
 # Changes to build PandaMicTx
 
-## Chage to Adafruit_GFX_Library
-
-The PandaMicTx UI is not used `LGFX_Sprite`
-
-The reason is that `LGFX_Sprite` seems to have a memory limit
-
->GFX library. However, it seems to be limited to a buffer size of 27840 bytes
-
-Original post：https://forums.adafruit.com/viewtopic.php?t=210140
-
-So use GFXcanvas1 from Adafruit_GFX_Library
-
-## undef setFont
-
-.pio\libdeps\PandaMicTx\M5GFX\src\M5GFX.h
-
-```
-// #ifdef setFont
-// #undef setFont
-// #endif
-```
+PandaMicTx UI is like PandaMicTxUI
 
 ## build
 
@@ -33,7 +13,42 @@ default_envs = PandaMicTx
 ```
 3.build and Upload
 
-# Changes to build PandaMicTx
+# Changes to build PandaMicTxUI
+
+## Chage to Adafruit_GFX_Library
+
+The PandaMicTxUI UI is not used `LGFX_Sprite`
+
+The reason is that `LGFX_Sprite` seems to have a memory limit
+
+>GFX library. However, it seems to be limited to a buffer size of 27840 bytes
+
+Original post：https://forums.adafruit.com/viewtopic.php?t=210140
+
+So use GFXcanvas1 from Adafruit_GFX_Library
+
+## undef setFont
+
+.pio\libdeps\PandaMicTxUI\M5GFX\src\M5GFX.h
+
+```
+// #ifdef setFont
+// #undef setFont
+// #endif
+```
+
+## build
+
+1.Add porject of example\PandaMicTxUI
+
+2.Edit `platformio.ini` and set `default_envs` with `PandaMicTxUI`, like:
+```
+[platformio]
+default_envs = PandaMicTxUI
+```
+3.build and Upload
+
+# Changes to build PandaMicTxMiniUI
 
 ![](images/miniUI-1.png)
 
