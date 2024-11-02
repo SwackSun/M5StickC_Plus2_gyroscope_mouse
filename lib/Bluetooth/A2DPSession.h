@@ -117,6 +117,7 @@ public:
     // ESP_ERROR_CHECK(esp_bt_gap_set_cod());
     currentDevice = deviceAddress;
     ESP_ERROR_CHECK(esp_a2d_source_connect(currentDevice.value));
+    ESP_LOGD(DS_TAG, "start ==> esp_a2d_source_connect(%s)",currentDevice.value.toString());
 
     connectionState = ConnectionState::CONNECTING;
     ESP_LOGD(DS_TAG, "Started a2dp sesssion.");
@@ -148,34 +149,40 @@ private:
   // This is how the BT Stack communicates device and connection information to us.
   void bt_gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
   {
-    ESP_LOGD("", "GAP event %d", event);
+    const char* TAG = "esp_bt_gap_cb";
+    switch (event) {
+    // 蓝牙匹配授权成功
+    case ESP_BT_GAP_AUTH_CMPL_EVT:{
+        if (param->auth_cmpl.stat == ESP_BT_STATUS_SUCCESS) {
+            ESP_LOGI(TAG, "authentication success: %s", param->auth_cmpl.device_name);
+            esp_log_buffer_hex(TAG, param->auth_cmpl.bda, ESP_BD_ADDR_LEN);
+        } else {
+            ESP_LOGE(TAG, "authentication failed, status:%d", param->auth_cmpl.stat);
+        }
+        break;
+    }
 
-    if (event == ESP_BT_GAP_DISC_RES_EVT)
-    {
-      ESP_LOGD("", "State: %d", param->disc_st_chg.state);
+// 如果使能了Secure Simple Pairing 安全配对模式
+#if (CONFIG_BT_SSP_ENABLED == 1)
+    case ESP_BT_GAP_CFM_REQ_EVT:
+        ESP_LOGI(TAG, "ESP_BT_GAP_CFM_REQ_EVT Please compare the numeric value: %d", param->cfm_req.num_val);
+        esp_bt_gap_ssp_confirm_reply(param->cfm_req.bda, true);
+        break;
+    case ESP_BT_GAP_KEY_NOTIF_EVT:
+        ESP_LOGI(TAG, "ESP_BT_GAP_KEY_NOTIF_EVT passkey:%d", param->key_notif.passkey);
+        break;
+    case ESP_BT_GAP_KEY_REQ_EVT:
+        ESP_LOGI(TAG, "ESP_BT_GAP_KEY_REQ_EVT Please enter passkey!");
+        break;
+#endif
+    case ESP_BT_GAP_MODE_CHG_EVT:
+        ESP_LOGI(TAG, "ESP_BT_GAP_MODE_CHG_EVT mode:%d", param->mode_chg.mode);
+        break;
+    default:
+        ESP_LOGI(TAG, "event: %d", event);
+        break;
     }
-    else if (event == ESP_BT_GAP_AUTH_CMPL_EVT)
-    {
-      if (param->auth_cmpl.stat == ESP_BT_STATUS_SUCCESS)
-      {
-        ESP_LOGI("", "authentication success: %s", param->auth_cmpl.device_name);
-        esp_log_buffer_hex("", param->auth_cmpl.bda, ESP_BD_ADDR_LEN);
-      }
-      else
-      {
-        ESP_LOGE("", "authentication failed, status:%d", param->auth_cmpl.stat);
-      }
-    }
-    else if (event == ESP_BT_GAP_KEY_REQ_EVT)
-    {
-      esp_bt_pin_code_t pin_code = {0};
-      esp_bt_gap_ssp_passkey_reply(param->cfm_req.bda, true, 0);
-    }
-    else if (event == ESP_BT_GAP_CFM_REQ_EVT)
-    {
-      ESP_LOGI("", "ESP_BT_GAP_CFM_REQ_EVT Please compare the numeric value: %d", param->cfm_req.num_val);
-      esp_bt_gap_ssp_confirm_reply(param->cfm_req.bda, true);
-    }
+    return;
   }
 
   // callback function for A2DP source
@@ -214,10 +221,12 @@ private:
       }
       else if (a2dpConnectionState == ESP_A2D_CONNECTION_STATE_DISCONNECTED)
       {
+        ESP_LOGD("", "ESP_A2D_CONNECTION_STATE_DISCONNECTED");
         connectionState = ConnectionState::DISCONNECTED;
         if (keepActive)
         {
           ESP_ERROR_CHECK(esp_a2d_source_connect(currentDevice.value));
+          ESP_LOGD("", "ESP_A2D_CONNECTION_STATE_DISCONNECTED to esp_a2d_source_connect");
         }
         else
         {
