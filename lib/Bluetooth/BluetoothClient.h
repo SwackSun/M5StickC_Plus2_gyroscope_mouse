@@ -8,15 +8,12 @@
 #include <esp_gap_bt_api.h>
 #include <nvs.h>
 #include <nvs_flash.h>
-#include "DiscoverySession.h"
 
-#define BC_TAG "BC_TAG"
+#define BC_TAG ""
 #define BT_DEVICE_NAME "PandaMic"
 
 class BluetoothClient
 {
-  DiscoverySession *discoverySession;
-
 public:
   bool isEnabled()
   {

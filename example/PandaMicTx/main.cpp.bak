@@ -89,7 +89,7 @@ void setup()
   pinMode(POWER_HOLD_PIN, OUTPUT);
   digitalWrite(POWER_HOLD_PIN, HIGH);
   Wire1.begin(I2C_SDA_PIN, I2C_SCL_PIN);
-  
+
   lcd.begin();
   lcd.setRotation(1);
   printf("Demo...\r\n");
@@ -153,7 +153,7 @@ void setup()
 
   // Initializations
   activateBluetooth();
-  audio_init();
+  // audio_init();
 
   aSession.start(storage.getActiveDevice().address);
 
@@ -191,11 +191,11 @@ void loop()
 void activateBluetooth()
 {
   ESP_LOGD(LOG_TAG, "Activating bluetooth...");
-  if (!bluetooth.isEnabled())
+  if (!Ble_isEnabled())
   {
     bool status;
     ESP_LOGD(LOG_TAG, "bluetooth.enable...");
-    status = bluetooth.enable();
+    status = Ble_enable();
 
     if (status)
     {
@@ -231,7 +231,7 @@ void turnOff()
   stop();
   audio_stop();
   audio_deinit();
-  bluetooth.disable();
+  Ble_disable();
   esp_deep_sleep_start();
 }
 

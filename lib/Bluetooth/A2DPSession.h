@@ -8,9 +8,11 @@
 #include <esp_gap_bt_api.h>
 #include <esp_a2dp_api.h>
 #include <esp_avrc_api.h>
-#include "bluetooth.h"
+#include "Bluetooth.h"
 #include "DeviceInformation.h"
-#include "song.h";
+#include "song.h"
+
+#define DS_TAG "DS_TAG"
 
 #define BT_APP_HEART_BEAT_EVT (0xff00)
 
